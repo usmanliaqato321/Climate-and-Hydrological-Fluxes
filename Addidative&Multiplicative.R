@@ -118,13 +118,6 @@ for (i in 1: length(clim.ctl_files_hist)) {
   save(deltaMUL_ctl ,file =  paste0("/",us_ctl,"SC(CTL).Rdata"))
   save(deltaMUL_std ,file =  paste0("/",us_std,"SC(STD).Rdata"))
 }
-
-
-
-
-
-
-
   ls <-lapply((mw+1):(length(doy)-mw-1), function(i){
   dd.sub <- subsetDimension(CORDEX_hist_pr, dimension = "time", indices=index.doy[[i]]) 
   dd.std <- climatology(dd.sub, clim.fun = list(FUN = "std", na.rm = TRUE))
