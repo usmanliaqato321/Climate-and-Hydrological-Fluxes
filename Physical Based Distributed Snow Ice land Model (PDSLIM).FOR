@@ -109,16 +109,16 @@ c      COMMON /meteomo/SP10M,RH2M,TPR,RITOT,ALB,T2M,BLWB
       DATA DAYN/0.,31.,28.,31.,30.,31.,30.,31.,31.,30.,31.,30.,31./
       DATA CPw,Wden,ROhu,Cpa,RatiKh,CKa,VLh,RatiKe,Rgas,Zw,Zt
      +/4217.8,1002.28,1.15,1005.,1.,0.41,2510000.,1.,2.87287,6.5,6./
-c CPw = specific heat of water at constant pressure [J/(Kgm ∞C)]
-c Wden = water density [kgm/m≥]
-c ROhu = density of humid air [Kgm/m≥]
-c Cpa = specific heat of air at constant pressure [J/(Kgm ∞C)]
+c CPw = specific heat of water at constant pressure [J/(Kgm ¬∞C)]
+c Wden = water density [kgm/m¬≥]
+c ROhu = density of humid air [Kgm/m¬≥]
+c Cpa = specific heat of air at constant pressure [J/(Kgm ¬∞C)]
 c RatiKh = ratio of Kh/Km,turbulent eddy diffusivity for heat and momentum,respectively
 c Cka = von Karman's constant
 c VLh = latent heat of vaporisation in J/kg
 c VLh =2.501-0.002361*Ta   ???
 c RatiKe = ratio of Ke/Km,turbulent eddy diffusivity for mass? and momentum,respectively
-c Rgas = constant of perfect gas (air)[m≥ mb/(Kgm K)]
+c Rgas = constant of perfect gas (air)[m¬≥ mb/(Kgm K)]
 c Zw = height of temperature and humidity sensor (m)
 c Zt = height of temperature and humidity sensor (m)  (2 m for Naltar)
       DATA CJOMME,HSNLA1,FHI,FHIeKs,BEERSN,GANESN/334944.,0.1,0.517,
@@ -416,9 +416,9 @@ c    P-E+SNOW	= Rain+Snow-Pot. Ev.
      &'Latent     +/-StD RAINnosnow Evnosnow ICEmelt SnowCA',
      &' Rainonsnow Snowonsnow Evonsnow Meltonsnow Snowmelt ',
      &'NetRain+m Netpre SWE   SCA+ICE                      '
-      WRITE(ifs,'(2A35,3A52)')'                  (W/m≤)           ',
-     &' (W/m≤)            (W/m≤)          ',
-     &' (W/m≤)             (mm)     ----------------(cells)',
+      WRITE(ifs,'(2A35,3A52)')'                  (W/m¬≤)           ',
+     &' (W/m¬≤)            (W/m¬≤)          ',
+     &' (W/m¬≤)             (mm)     ----------------(cells)',
      &' (mm) ----------------------------------------------',
      &'     -----------------------------------------  (mm)'
 	enddo
@@ -437,44 +437,44 @@ c	  WRITE(19,*)'           TERZO - QUARTO  [W3/m6] - [W4/m8]  '
 	  WRITE(10,*)'      POINT Simulation of RADIATION & ALBEDO ' 
 	  WRITE(10,*)'AnMeGi Ora  Altit  Azim PROJEC Radmis Rclsky ',
      &' AlbedoAlbedfDifradCloudi'
-        WRITE(10,*)'               [deg]           [W/m≤] [W/m≤] ',
-     &'[W/m≤]   []    []    []    []  '
+        WRITE(10,*)'               [deg]           [W/m¬≤] [W/m¬≤] ',
+     &'[W/m¬≤]   []    []    []    []  '
 	ELSEIF(ISTAMP.EQ.-2) THEN
         WRITE(1,*)'   CELL(Station)  METEOROLOGICAL INPUT & MELT'
         WRITE(1,'(A37,A55)')'AnMeGi Ora   Pioggia Temper.  Radiaz.',
      &'Velven. Humid.   HSup   Wequi   Melt  Tsurf Portata'
-        WRITE(1,'(A37,A55)')'             [mm]      [∞C]    [W/m≤]',
-     &' [m/s]   [%]   [W/m≤]    [m]    [mm]  [∞C]   [m≥/s]'
+        WRITE(1,'(A37,A55)')'             [mm]      [¬∞C]    [W/m¬≤]',
+     &' [m/s]   [%]   [W/m¬≤]    [m]    [mm]  [¬∞C]   [m¬≥/s]'
         WRITE(7,*)'   CELL(STATION)  HEAT EXCHANGE COMPONENTS   '
         WRITE(7,*)'AnMeGi Ora Swavbal Lwavbal Hconvec Hlatent  Hpdt',
      &'  Snogro Melt  Portata PotEv'
-        WRITE(7,*)'           ----------------[W/m≤]---------------',
+        WRITE(7,*)'           ----------------[W/m¬≤]---------------',
      &'-------- [mm]  [mm]    [mm] '
-        WRITE(8,*)'DISTRIBUTED HEAT EXCHANGE COMPONENTS [W/m≤]-Melt[mm]'
+        WRITE(8,*)'DISTRIBUTED HEAT EXCHANGE COMPONENTS [W/m¬≤]-Melt[mm]'
         WRITE(8,*)'AnMeGi Ora X Y Ta RADNET Swavba Lwavba Hconve',
      &' Hlaten Hpdt Snogr(HG12) Heabal Melt'
-        WRITE(8,*)'              [∞C]   -------------[W/m≤]-------',
+        WRITE(8,*)'              [¬∞C]   -------------[W/m¬≤]-------',
      &'------------------------ [mm]'
         WRITE(9,*)'                       DISTRIBUTED SNOWPACK MODEL'
         WRITE(9,*)'AnMeGiOra   X  Y Hsnow Wequi Tspck Temp1 Temp2',
      &'Dens1Dens2 Sat1 Sat2 Watin Psnow Melt'
-        WRITE(9,*)'             [m]   [mm]        [∞C]       ',
-     &' [kg/m≥]  [1/1000]  [mm]  [mm] [mm]'
+        WRITE(9,*)'             [m]   [mm]        [¬∞C]       ',
+     &' [kg/m¬≥]  [1/1000]  [mm]  [mm] [mm]'
         WRITE(10,*)'      POINT Simulation of RADIATION & ALBEDO ' 
         WRITE(10,*)'AnMeGi Ora  Altit  Azim PROJEC Radmis Rclsky ',
      &'Rcldif AlbedoAlbedfDifradCloudi'
-        WRITE(10,*)'               [deg]           [W/m≤] [W/m≤] ',
-     &'[W/m≤]   []    []    []    []  '      
+        WRITE(10,*)'               [deg]           [W/m¬≤] [W/m¬≤] ',
+     &'[W/m¬≤]   []    []    []    []  '      
 	ELSEIF(ISTAMP.EQ.-3)THEN
-        WRITE(8,*)' CELL(STATION)   EXCHANGE COMPONENTS [W/m≤]-Melt[mm]'
+        WRITE(8,*)' CELL(STATION)   EXCHANGE COMPONENTS [W/m¬≤]-Melt[mm]'
         WRITE(8,*)'AnMeGi Ora  X  Y   Ta  RADNET Swavba Lwavba Hconve',
      &' Hlaten Hpdt Snogr(HG12) Heabal  Melt'
-        WRITE(8,*)'              [ ∞ C] -------------[W/m≤]-------',
+        WRITE(8,*)'              [ ¬∞ C] -------------[W/m¬≤]-------',
      &'------------------------ [mm]'      
         WRITE(9,*)'                   CELL(STATION)   SNOWPACK MODEL'
         WRITE(9,*)'AnMeGiOra   X    Y Hsnow Wequi Tspck Temp1 Temp2',
      &'Dens1Dens2 Sat1 Sat2 Watin Psnow Melt'
-        WRITE(9,*)'             [m]   [m]        [ ∞ C]        ',
+        WRITE(9,*)'             [m]   [m]        [ ¬∞ C]        ',
      &' [Kg/m3]  [1/1000]  [mm]  [mm] [mm]'
         WRITE(21,*)'AnMeGiOra WequiM1 WEQUIV RAIN    SNOW    EVAP    ',
      &'MELT    DIFSTO'
@@ -615,7 +615,7 @@ C     +(TMPXX(J),J=1,6)
 C	READ(3,*) NJJ,NYY,(TMPTIM(J),J=1,3),(TMPXX(J),J=1,6)
 Cgg Meteorological variables to be read are supposed to be 6
 Cgg	 1. precipitation      [mm/h]
-Cgg	 2.	temperature		     [∞C]
+Cgg	 2.	temperature		     [¬∞C]
 Cgg	 3.	humidity              [%]
 Cgg	 4.	pressure           [mbar]
 Cgg	 5.	wind speed - 10 m  [km/h]
@@ -901,7 +901,7 @@ C                  *** ESTREMI ROUTINE ORARIA
 C
 	   IATR=NINT(TR-2.*PASSO)                                          
 	   IATS=NINT(TS)                                                   
-C     ATRS: Durata, in ore, della giornata (dç)
+C     ATRS: Durata, in ore, della giornata (d¬ç)
 	   ATRS=FLOAT(IATS-IATR)                                           
 	   ILONG=INT(ATRS/PASSO)                                           
 cccx           IF(ISTAMP.GE.1) THEN
@@ -1021,7 +1021,7 @@ c       DO 800 NY=357,357
 c Passo Brizio
 c       DO 900 NX=227,227
 c       DO 800 NY=249,249
-c Passo AdamË
+c Passo Adam√®
 c       DO 900 NX=314,314
 c       DO 800 NY=287,287
 c Ai caduti dell'Adamello
@@ -1091,7 +1091,7 @@ CGG     corrected; the correction factor of the rain fraction of precipitation i
 CGG     assumed to be equal to unity
 CGG
 CGG 21/05/09 correzione gradiente altitudinale preecipitazione!! 
-CGG          il gradiente Ë 0.312*Dh a scala annuale
+CGG          il gradiente √® 0.312*Dh a scala annuale
 CGG          P=P+0.000324*(hgrid-hspmis)
 CGG          si preferisce convertire questo incremento in un fattore moltiplicativo
 CGG 
@@ -1323,7 +1323,7 @@ C
 crr090614 controllare metterei un ciclo sulla temperatura ghiaccio
 cc    firn density =830 kg/m3 (Paterson, 1994; page 9)
 CC    ThKICE (eq.2 page 205 Paterson, 1994) = 9,828 *exp(-0.0057 TK)
-CC    A surface ice/firn layer 0.1 m deep is assumed to exchange conductive heat with a 0∞C isothermal glacier
+CC    A surface ice/firn layer 0.1 m deep is assumed to exchange conductive heat with a 0¬∞C isothermal glacier
 c       CS    =Specific heat of ice   (Eagleson) (2093.4)        [J/(Kg C)]
 
 	   ticemed=tice/2.
@@ -1355,7 +1355,7 @@ c20060201 no snow, debris over ice
       	xyicem(nx,ny)=amax1(HeaCON*SECDT/cjomme,0.0)
 	else
 c20060201
-crr090626	no snow , just ice melt only if ice is at 0∞C    
+crr090626	no snow , just ice melt only if ice is at 0¬∞C    
           Heabal=Heawhc-Heacon
           if(ticemed.ge.0.0) then 
 			xyicem(nx,ny)=amax1(Heamelt*SECDT/cjomme,0.0)
@@ -2067,7 +2067,7 @@ C
 
 997     FORMAT(/,6X,'N.ore SWAMUT,RAMUT(snow on sensor) HESMUT ,  HEMUT'
      &'    MESMUT,  MEMUT',/,
-     &'               [W/m≤]                           [W/m≤]     [mm]',
+     &'               [W/m¬≤]                           [W/m¬≤]     [mm]',
      &/,'Mean  ',2X,I4,2F6.1,13X,F8.1,F8.3,4X,2F7.2,
      &/,'St.Dev',6X,2F6.1,13X,F8.1,F8.3,4X,2F7.2)
 
@@ -2559,10 +2559,10 @@ C       NX      = X coordinate position of actual square
 C       NY      = Y coordinate position of actual square
 C       THETR   = SUN ELEVATION                         [rad]
 C       PSIZ    = SUN AZIMUT (respect to NORTH)         [rad]      
-C       SolBEA  =Direct beam radiation [W/m≤] on sensor station grid
+C       SolBEA  =Direct beam radiation [W/m¬≤] on sensor station grid
 C
 C       Output
-C       SOLBXY  = Direct beam radiation on DTM grid     [W/m≤]
+C       SOLBXY  = Direct beam radiation on DTM grid     [W/m¬≤]
 C       HGRID   = Grid square mean elevation            [m]
 C       PROJEC  = COSINE PROJECTION
 C
@@ -3481,7 +3481,7 @@ C       PDKEF(i) =Heat content i-layer (negative)          [J]
 C       HSNPCK   =Height of snowpack                       [m]
 C       PACT(i)  =Snowpack i-layer mean temperature        [C]
 C       PSNOWP   = Input; Snow net precipitation(water equivalent)  [m/SECDT]
-C       DENSN(i) =Snow i-layer density                     [kg/m≥]
+C       DENSN(i) =Snow i-layer density                     [kg/m¬≥]
 C       SECDT     Sampling step                            [s]
 C       SECDTH    Integration step                         [s]
 C       STPDTH    N. of Integration steps                  []            
@@ -3923,12 +3923,12 @@ c     &WDEN/DSTM1,0.)
       RETURN
       END               
 C
-C     TSPK  Snowpack Mean temperature [.¯.C]
+C     TSPK  Snowpack Mean temperature [.√∏.C]
 C
 C     Input
 C     HSNPCK   [m]
-C     DENSN    [kg/m≥]
-C     PACT     [.¯.C]
+C     DENSN    [kg/m¬≥]
+C     PACT     [.√∏.C]
       FUNCTION TSPK(NX,NY,HSNPCK,DENSN,PACT)
 	PARAMETER (NNR=353,NNC=262)
 	REAL HSNPCK(NNR,NNC),DENSN(2,NNR,NNC),PACT(2,NNR,NNC)        
@@ -3951,7 +3951,7 @@ C     WEQU    Computes snow water equivalent  [m]
 C     
 C     Input
 C     HSNPCK   [m]
-C     DENSN    [kg/m≥]
+C     DENSN    [kg/m¬≥]
       FUNCTION WEQU(NX,NY,HSNPCK,DENSN)
 	PARAMETER (NNR=353,NNC=262)
 	REAL HSNPCK(NNR,NNc),DENSN(2,NNR,NNc) 
@@ -4957,7 +4957,7 @@ C
 C
 C       FUNCTION TLAPSE(Tasns,Hgrid,Hsenso) Determination of temperatures
 C       variation with altitude
-C       GAMMAT Temperature Lapse rate [.¯.C/m] 
+C       GAMMAT Temperature Lapse rate [.√∏.C/m] 
 C       (computed in subroutine dtweight)
 C
 	FUNCTION TLAPSE(Tasns,HGRID,Hsenso,gammat)
@@ -4994,12 +4994,12 @@ C
 C       FUNCTION RAINSN(Ta,P,Rain) Determination of Form of Precipitation
 C              (See CEQUEAU,UBC,PRMS or Soncini Models)                 
 C
-C       Ta    =Input;Air Temperature          [.¯.C]
+C       Ta    =Input;Air Temperature          [.√∏.C]
 C       P     =Input;Precipitation (Water equivalent) [mm]
 C       Rain  =Output; Rain precipitation    "        [mm]
 C       Rainsn=Output; Snow precipitation    "        [mm] 
 C
-C       STRN        Threshold-type parameter  [.¯.C]
+C       STRN        Threshold-type parameter  [.√∏.C]
 C 
 	FUNCTION RAINSN(Ta,P,Rain)
       COMMON /SNOW/A0,A1,TSPRIN,ASPRIN,TRNCF,AM0,CAM,GANESN,ALFAS,
@@ -5025,7 +5025,7 @@ C
 C
 C       RLics       Incoming Long-wave radiation under clear-sky [W/mq]
 C                   Open areas (no forest)
-C       Ta          Air Temperature         [.¯.C]      
+C       Ta          Air Temperature         [.√∏.C]      
 C       Ea          Air Vapor pressure      [mb]
 C       STEFAA      Stefan-Boltzman Law (air temperature)    [W/mq]
 C
@@ -5036,12 +5036,12 @@ C
 	END
 C
 C       Hp          Heat advected by rain at Temperature equal to air
-C                   (Rain is freezed to 0∞ C Temperature   [J/mq]
-C       Cpw         Specific Heat of water [J/(Kgm ∞C)]
+C                   (Rain is freezed to 0¬∞ C Temperature   [J/mq]
+C       Cpw         Specific Heat of water [J/(Kgm ¬∞C)]
 C       Wden        Water density          [Kgm/mc] 
 C       P           Rainfall               [mm]
-C       Ta          Air Temperature        [∞C]
-C       Tsnow       Snow Surface Temperature       [∞C]
+C       Ta          Air Temperature        [¬∞C]
+C       Tsnow       Snow Surface Temperature       [¬∞C]
 C       
 	FUNCTION HP(P,Ta,Tsnow)
       COMMON /HEAT/CPw,Wden,ROhu,Cpa,RatiKh,CKa,Z0,VLh,RatiKe,Rgas,ZW,ZT
@@ -5052,11 +5052,11 @@ C
 C       Hc          Convective Heat       [W/mq]
 C
 C       Dw          Convective term       [m/s]
-C       Ta          Air Temperature       [∞C]
-C       Tsnow       Snow Surface Temperature       [∞C]
+C       Ta          Air Temperature       [¬∞C]
+C       Tsnow       Snow Surface Temperature       [¬∞C]
 C
 C       ROhu        Density of humid air  [Kgm/mc]
-C       Cpa         Specific heat of air at constant pressure [J/(Kgm ∞C)]
+C       Cpa         Specific heat of air at constant pressure [J/(Kgm ¬∞C)]
 C       RatiKh      Kh/Km                 [ ]
 C
 	FUNCTION Hc(Dw,Ta,Tsnow)
@@ -5079,13 +5079,13 @@ C
 C
 C       Ev          Evaporation rate      [Kgm/(m2 s)]
 C                   Vapor pressure at snow surface is assumed equal to
-C                   saturation vapor pressure at Snow Temperature (.¯.0=6.11 mb)
+C                   saturation vapor pressure at Snow Temperature (.√∏.0=6.11 mb)
 C
 C       Dw          Convective term       [m/s]
 C       EA(Ta,Rhumi) Absolute Vapor Pressure       [mb]      
 C       (  EA=Rhumi/100*EAS(Ta)  )
-C       Ta          Air Temperature       [.¯.C]
-C       Tsnow       Snow Surface Temperature       [.¯.C]
+C       Ta          Air Temperature       [.√∏.C]
+C       Tsnow       Snow Surface Temperature       [.√∏.C]
 C
 C       RatiKe      Ke/Km                 [ ]
 C       Rgas        Constant of perfect gas (air)   [m3 mb/(Kgm K)]
@@ -5117,8 +5117,8 @@ C                   Correction for lapse-neutral-stability condition is done
 C                   applying Richardson number procedure (Price,Dunne,WRR,1976)
 C                   And Male-Granger formula+data(WRR,1981) 
 C
-C       Ta          Air  Temperature               [.¯.C]
-C       Tsnow       (Snow) Surface Temperature       [.¯.C]
+C       Ta          Air  Temperature               [.√∏.C]
+C       Tsnow       (Snow) Surface Temperature       [.√∏.C]
 C       Hsnst       Height of snowpack at station [m]
 C       Vw          Wind speed                    [m/s]
 C
@@ -5140,7 +5140,7 @@ C2.8
 	END
 C                                       
 C       EPSA:       Air emissivity [ ] following Satterlund eq. in WRR,1979
-C       Ta          Air Temperature [.¯.C]      
+C       Ta          Air Temperature [.√∏.C]      
 C       EA(T,Rhumi) Absolute Vapor Pressure [mb]      
 C       EA=Rhumi/100*EAS(Ta)
 C
@@ -5150,7 +5150,7 @@ C
 	END
 C
 C       EAS:        Saturated Vapor Pressure  [mb]
-C       Ta          Air Temperature [.¯.C]      
+C       Ta          Air Temperature [.√∏.C]      
 C
 	FUNCTION EAS(Ta)
 C          WRITE (*,*)'TA=',TA
@@ -5163,8 +5163,8 @@ C       RLio Long-wave radiation balance for forested/not and
 C           Clouds/no conditions   [W/mq]
 C       FOR   = Percentage of forested area cover 
 C       Cloudi= Percentage of diffused radiation (Assumed as cloudiness)
-C       Ta    =Air temperature [.¯.C]
-C       Tsnow =Snow Surface Temperature       [.¯.C]
+C       Ta    =Air temperature [.√∏.C]
+C       Tsnow =Snow Surface Temperature       [.√∏.C]
 C       EA(T,Rhumi) Absolute Vapor Pressure [mb]      
 C  
 	FUNCTION RLiO(COVER,Cloudi,Ta,Tsnow,EA)
@@ -5200,15 +5200,15 @@ C
 C       Approximation 2.
 C       2.   Analitical solution for heat flow through semi-infinite plane
 C       without phase change with initial temperature (before snowfall) equal
-C       to mean yearly air temperature and boundary condition T=0 .¯.C (snowmelt)
+C       to mean yearly air temperature and boundary condition T=0 .√∏.C (snowmelt)
 C       Formula (5.49)
 C       See Bonacina-Cavallini-Mattarolo Trasmisione del calore Pag. 130..134
 C
 C       TIMENO = Hours after 15th of November (assumed first snowfall)  [hr]
 C
 C       ASOIL  = Soil thermal diffusivity (.001486 Eagleson-Bonacina) [mq/h]         
-C       SLAMDA = Soil thermal conductivity (1.557)       [W/(m .¯.C)]
-C       Tm     = Annual Mean Air temperature      (6.2)         [.¯.C]
+C       SLAMDA = Soil thermal conductivity (1.557)       [W/(m .√∏.C)]
+C       Tm     = Annual Mean Air temperature      (6.2)         [.√∏.C]
 C
 	FUNCTION Hgroun(TIMENO)
 	PARAMETER(NNR=353,NNC=262)
@@ -5310,12 +5310,12 @@ C         ALBEDO IN PRESENCE OF DIFFUSE RADIATION and/or CLOUDS
 C
 C     DIFRAD= Input:Cloudiness/Diffused radiation [0,1]
 C     T2112= Time [days] after 21st December
-C     TEMCUM= Sum of Maximum Daily Temperatures above -10 ¯ C 
-C             after last snowfall [¯C]
+C     TEMCUM= Sum of Maximum Daily Temperatures above -10 √∏ C 
+C             after last snowfall [√∏C]
 C
 C     ALBMEL Clear-sky albedo after snow metamorphosis
 C     AM0   =Late sping albedo   (0.38)    
-C     CAM  =Decay constant for aged snow albedo [1/¯C]
+C     CAM  =Decay constant for aged snow albedo [1/√∏C]
 C
        FUNCTION ALBDIF(DIFRAD,T2112,TEMCUM)
       COMMON /SNOW/A0,A1,TSPRIN,ASPRIN,TRNCF,AM0,CAM,GANESN,ALFAS,
@@ -5374,7 +5374,7 @@ c p=free throughfall fraction:parte di pioggia che cade direttamente a terra,
 c attraverso gli alberi
 c k=drainage parameter [mm/h]
 c b=drainage parameter [1/mm]
-c S=maximum canopy storage capacity: capacit‡ max di intercettazione 
+c S=maximum canopy storage capacity: capacit√† max di intercettazione 
 c della vegetazione [mm]
 c c=canopy storage [mm]      
       integer T
@@ -5451,7 +5451,7 @@ C      return
 C      end
       
 C      function ra(z,d,z0,uz)
-Cc uz=velocit‡ del vento [m/s] all'altezza z [m], hc=altezza della vegetazione [m],
+Cc uz=velocit√† del vento [m/s] all'altezza z [m], hc=altezza della vegetazione [m],
 c d=piano degli spostamenti nulli, z0=scabrezza
 C      z=2
 C      uz=2.5
@@ -5482,18 +5482,18 @@ c      COMMON /meteomo/SP10M,RH2M,TPR,RITOT,ALB,T2M,BLWB
 C DETERMATION OF METEOROLOGICAL VARIABLES
 cc
 c VLhMJ = latent heat of vaporisation in MJ/kg
-c gamma = psychrometric constant [kPa/∞C]-4.2.28      
-c ROhu = density of air [kg/m≥]
+c gamma = psychrometric constant [kPa/¬∞C]-4.2.28      
+c ROhu = density of air [kg/m¬≥]
 c EAS = saturated vapour pressure [hPa=mbar]-4.2.2      
 c EA = absolute vapour pressure [hPa=mbar]-pag.16 FAO n.24      
-c deltag = gradient of saturated vapour pressure vs. temperature [kPa/∞C]-4.2.3
+c deltag = gradient of saturated vapour pressure vs. temperature [kPa/¬∞C]-4.2.3
 cc      
       VLhMJ=VLh*1E-6
       gamma=0.0016286*press/10./VLhMJ
       if (h0c.le.0.5) then
 	   EASkPa=EAS(Ts)/10.
-C   ATTENZIONE!, usare ts anziche' ta	puÚ comportare valori di ETPW eccessivamente
-C elevati nel caso di debris perche' la differenza tra ts e ta Ë molto elevata 
+C   ATTENZIONE!, usare ts anziche' ta	pu√≤ comportare valori di ETPW eccessivamente
+C elevati nel caso di debris perche' la differenza tra ts e ta √® molto elevata 
 c	   EASkPa=EAS(TA)/10.
 	 else
 	   EASkPa=EAS(Ta)/10.
@@ -5639,11 +5639,11 @@ c h0cst canopy height at station H0c=h0c(NXSENS,NYSENS)
 C DETERMATION OF METEOROLOGICAL VARIABLES
 cc
 c VLhMJ = latent heat of vaporisation in MJ/kg
-c gamma = psychrometric constant [kPa/∞C]-4.2.28      
-c ROhu = density of air [kg/m≥]
+c gamma = psychrometric constant [kPa/¬∞C]-4.2.28      
+c ROhu = density of air [kg/m¬≥]
 c EAS = saturated vapour pressure [hPa=mbar]-4.2.2      
 c EA = absolute vapour pressure [hPa=mbar]-pag.16 FAO n.24      
-c deltag = gradient of saturated vapour pressure vs. temperature [kPa/∞C]-4.2.3
+c deltag = gradient of saturated vapour pressure vs. temperature [kPa/¬∞C]-4.2.3
 cc      
       VLhMJ=VLh*1E-6
       gamma=0.0016286*press/10./VLhMJ
