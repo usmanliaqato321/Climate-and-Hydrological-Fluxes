@@ -1,0 +1,157 @@
+library(readxlsx)
+library(ggplot2)
+library(scales)
+library(dplyr)
+library(tidyr)
+library(Metrics)
+library(devtools)
+library(readxl)
+library(caTools)
+library(lattice)
+library(lubridate)
+library(raster)
+library(trend)
+library(forecast)
+library(corrplot)
+library(tmap)
+library(plotrix)
+library(reshape)
+library(mblm)
+library(RColorBrewer)
+library(ggpubr)
+# Read Average Seasoanl Discharge Data for 40 year from 1975 to 2014.  
+dataset <- read_xlsx("Astore.xlsx")
+dataset = na.omit(dataset)
+colnames(dataset)<- c("Date","DJF","MAM","JJA","SON","ANN")
+colnames(dataset)<- c("Date","DJF_AB","MAM_AB","JJA_AB","SON_AB","ANN_AB","DJF.G","MAM.G","JJA.G","SON.G","ANN.G")
+db<- dataset$MAM
+dataset$Date <- format(dataset$Date,format = "%Y")
+# Convert Discharge to Time Series 
+TS<- ts(db, start=c(1973), end=c(2017), frequency=1)
+# Make Time Window for odd years
+oddvalues<- seq(1, by = 2, len = 23)
+z=seq(0,45,2)
+b=seq(oddvalues[1],length(TS),(oddvalues[1]-z[1]))
+# Develop Matrices for Moving Average and MK Test
+matrix1=as.data.frame(matrix(ncol = length(oddvalues), nrow = 45))
+matrix2=as.data.frame(matrix(ncol = length(oddvalues), nrow = 45))
+matrix3=as.data.frame(matrix(ncol = length(oddvalues), nrow = 45))
+names(matrix1)=c(oddvalues)
+names(matrix2)=c(oddvalues)
+names(matrix3)=c(oddvalues)
+
+# Make loop to calculate for every year
+i=1
+j=2
+o=seq(0,length(oddvalues),1)
+for (j in 2:length(oddvalues)) {
+  a=seq(1,(45-z[j]),1)
+  b=seq(oddvalues[j],length(TS),(oddvalues[j]-z[j]))
+  for (i in 1:length(a)) {
+    
+    d=mk.test(TS[a[i]:b[i]], alternative = c("two.sided"),
+              continuity = TRUE)
+    d=d$p.value
+    e=  trend::sens.slope(TS[a[i]:b[i]])
+    slope = e$estimates
+    g = mean(TS[a[i]:b[i]])
+    k=i+o[j]
+    matrix1[k,j]=d
+    matrix2[k,j]=slope
+    matrix3[k,j]=g
+  }
+}
+# Remove Intial 20 years Significance as it do not have any impact
+matrix1[,c(1:10)] = NA
+matrix2[,c(1:10)] = NA
+# Transpose Matrix
+matrix1 = t(matrix1)
+matrix2 = t(matrix2)
+matrix3 = t(matrix3)
+
+# Use ggplot2 to plot Moving Average and MK Test Together. However, I do not understand how to plot both matrices on each other.
+longData_MK<-melt(matrix1)
+longData_MK<-longData_MK[longData_MK$value!=0,]
+longData_Trend<-melt(matrix2)
+longData_Trend<-longData_Trend[longData_Trend$value!=0,]
+longData_MA<-melt(matrix3)
+longData_MA<-longData_MA[longData_MA$value!=0,]
+
+colnames(longData_MA) <-  c("X1","X2","Discharge")
+# Petit T Test to Check Change Point 
+pettittTest <- trend::pettitt.test(x = TS)
+print(dataset[['Date']][pettittTest$estimate])
+# If you want to check change point by diagram you can use this code
+ggplot(data = dataset, mapping = aes(x =dataset$Date , y = dataset$Discharge)) +
+  geom_line(data = dataset, mapping = aes(x =dataset$Date , y = dataset$Discharge)) +
+  geom_vline(mapping = aes(xintercept = as.numeric(dataset[['Date']][pettittTest$estimate])),
+             linetype = 2,
+             colour = "red",
+             size = 2)
+
+# Plotting all variables together...
+
+plot2  <-ggplot()+
+  geom_raster(data= longData_MA,aes(y=longData_MA$X1,x= longData_MA$X2,fill= Discharge)) + 
+  scale_fill_gradient2(low="ghostwhite",mid ="gold" , high="red",na.value = "transparent",space = "Lab", guide = "colourbar",
+                       aesthetics = "fill") + geom_point(data = filter(longData_MK,value <= 0.05),aes(X2, X1,colour = "Significant"),shape=20,size=0.75)+
+  geom_point(data = filter(longData_MK,value > 0.05),aes(X2, X1,colour = "Nonsignificant"),shape=1,size=1)+
+  geom_point(data = filter(longData_Trend,value > 0) ,aes(X2, X1, colour = "Increasing"),shape=2,size=2)+
+  geom_point(data = filter(longData_Trend,value < 0),aes(X2, X1,colour = "Decreasing"),shape=6,size=2)+
+  scale_color_manual(name="Trend Behaviour",values = c('Significant' = 'black','Nonsignificant' = 'black','Decreasing'= 'black','Increasing'='black'))+
+  #scale_color_manual(name="Trend Behaviour",values = c('Nonsignificant' = 'black','Decreasing'= 'black','Increasing'='black'))+
+  labs(x="Central year", y="Time Window (years)", title="BQ Discharge(mm/year)") +
+  coord_cartesian(xlim =c(0, 45), ylim = c(0,45))+
+  theme_bw() + theme(axis.text.x=element_text(size=9, angle=0, vjust=0.3),
+                     axis.text.y=element_text(size=9),
+                     plot.title=element_text(size=11)) 
+plot2 <- plot2+ geom_vline(xintercept=15, linetype="dashed", 
+                           color = "red", size=2)
+plot2 <- plot2 + theme_minimal()+ggsave(" Winter BQ Discharge.png",width=6, height=4,dpi=400) 
+print(plot2)
+
+
+plot1  <-ggplot()+
+  geom_raster(data= longData_MA,aes(y=longData_MA$X1,x= longData_MA$X2,fill= Discharge))+ 
+  scale_fill_gradient(low ="white", high="red3",na.value = "transparent", guide = "legend",
+                      breaks=c(55,65,75,85),labels=c("44-55","55-65","65-75","75-95"), limits=c(44,95))+
+  geom_point(data = filter(longData_MK,value <= 0.05),aes(X2, X1,colour = "Significant"),shape=20,size=1.1)+
+  #geom_point(data = filter(longData_MK,value > 0.05),aes(X2, X1,colour = "Nonsignificant"),shape=1,size=1)+
+  #geom_point(data = filter(longData_Trend,value <= 0) ,aes(X2, X1, colour = 'Decreasing'),shape=15,size=1.5)+
+  #geom_point(data = filter(longData_Trend,value==0) ,aes(X2, X1, colour = "Nochange"),shape=15,size=1.5)+
+  geom_point(data = filter(longData_Trend,value > 0) ,aes(X2, X1, colour = "Increasing"),shape=2,size=1.5)+
+  geom_point(data = filter(longData_Trend,value < 0),aes(X2, X1,colour = "Decreasing"),shape=6,size=1.5)+
+  #scale_color_manual(name="Trend behaviour",values = c('Nonsignificant' = 'black','Decreasing'= 'navy','Increasing'='darkgreen'))+
+  scale_color_manual(name="Trend behaviour",values = c('Significant' = 'black','Nonsignificant' = 'black','Decreasing'= 'navy','Increasing'='darkgreen'))+
+  #scale_color_manual(name="Trend behaviour",values = c('Decreasing'= 'navy','Increasing'='darkgreen'))+
+  coord_cartesian(xlim =c(0, 45), ylim = c(0,45))+labs(x="Central year", y="Time window (years)", title="Astore Winter (DJF) (mm/season)")+
+  theme_bw()+ theme(axis.title.x = element_text(color = "black", size = 14, face = "bold"),
+                    axis.title.y = element_text(color = "black", size = 14, face = "bold")
+  )+ geom_vline(xintercept=14, linetype="dashed", 
+                color = "black", size=2)+guides(fill = guide_legend(reverse=TRUE))
+plot1 <-plot1  + ggsave("DJF_Discharge.tiff",width=5.5, height=3.5,dpi=500) 
+print(plot1)
+#MAM
+plot2  <-ggplot()+
+  geom_raster(data= longData_MA,aes(y=longData_MA$X1,x= longData_MA$X2,fill= Discharge))+ 
+  scale_fill_gradient(low ="white", high="red3",na.value = "transparent", guide = "legend",
+                      breaks=c(140,180,220,240),labels=c("100-140","140-180","180-220","220-292"), limits=c(100,292))+
+  geom_point(data = filter(longData_MK,value <= 0.05),aes(X2, X1,colour = "Significant"),shape=20,size=1.1)+
+  #geom_point(data = filter(longData_MK,value > 0.05),aes(X2, X1,colour = "Nonsignificant"),shape=1,size=1)+
+  #geom_point(data = filter(longData_Trend,value <= 0) ,aes(X2, X1, colour = 'Decreasing'),shape=15,size=1.5)+
+  #geom_point(data = filter(longData_Trend,value==0) ,aes(X2, X1, colour = "Nochange"),shape=15,size=1.5)+
+  geom_point(data = filter(longData_Trend,value > 0) ,aes(X2, X1, colour = "Increasing"),shape=2,size=1.5)+
+  geom_point(data = filter(longData_Trend,value < 0),aes(X2, X1,colour = "Decreasing"),shape=6,size=1.5)+
+  #scale_color_manual(name="Trend behaviour",values = c('Nonsignificant' = 'black','Decreasing'= 'navy','Increasing'='darkgreen'))+
+  scale_color_manual(name="Trend behaviour",values = c('Significant' = 'black','Nonsignificant' = 'black','Decreasing'= 'navy','Increasing'='darkgreen'))+
+  #scale_color_manual(name="Trend behaviour",values = c('Decreasing'= 'navy','Increasing'='darkgreen'))+
+  coord_cartesian(xlim =c(0, 45), ylim = c(0,45))+labs(x="Central year", y="Time window (years)", title="Astore Pre-Monsoon (MAM) (mm/season)")+
+  theme_bw()+ theme(axis.title.x = element_text(color = "black", size = 14, face = "bold"),
+                    axis.title.y = element_text(color = "black", size = 14, face = "bold")
+  )+ geom_vline(xintercept=15, linetype="dashed", 
+                color = "black", size=2)+guides(fill = guide_legend(reverse=TRUE))
+plot2 <-plot2  + ggsave("MAM_Discharge.tiff",width=5.5, height=3.5,dpi=500) 
+print(plot2)
+# Combine Results
+figure <- ggarrange(plot1,plot2,labels = c("Winter (DJF)", "Pre-Monsoon (MAM)",font.label = 2),ncol = 1, nrow = 2)
+figure <-figure + ggsave("combine.tiff",width=6, height= 6,dpi=300) 
