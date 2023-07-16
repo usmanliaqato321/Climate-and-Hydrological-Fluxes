@@ -1,0 +1,84 @@
+library(zoo)
+library(hydroTSM)
+library(xts)
+library(sp)
+library(automap)
+library(gstat)
+library(sp)
+library(rgdal)
+library(raster)
+bena.ts<- read.csv("monthly.ts.csv")
+bena.gis = read.csv("gis_data.csv")
+bena.sa = readOGR("UIB_Subbasubs.shp")
+stations <- readOGR("UIB_Subbasubs.shp")
+monthly_UTM_shp<- readOGR("Monthly_UTM.shp")
+plot(bena.sa)
+# Covert Raster to spatial grid data frame 
+y <- as(bena.rs, "SpatialGridDataFrame")
+y$ELEVATION = y$COUNT
+z <- as(bena.tm, "SpatialGridDataFrame")
+z$Temperature = z$X9febtemp100
+
+# Combining Time Series and Location of Stations
+x.spt <- gists2spt(x.ts=x.ts[1,], x.gis=x.gis, X="EAST_ED50",
+                   Y="NORTH_ED50", na.rm=FALSE, sname="station_Name")
+# Plotting
+spplot(x.spt, zcol="value")
+
+# Make Projection according to study area
+p4s <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0 ")
+bena.ts <- bena.ts[,-c(1)]
+i = 1
+
+for (i in nrow(bena.ts)){
+  bena.ts2 <- as.numeric(bena.ts[i, 1:ncol(bena.ts)])
+  names(bena.ts2) = colnames(bena.ts[i,1:ncol(bena.ts)])
+  x.ok <- hydrokrige(x.ts= bena.ts2[i], x.gis=bena.gis, 
+                     X="latitude", Y="longtitude", sname="ID",
+                     formula=value~ ELEVATION,
+                     subcatchments= bena.sa,
+                     type = "cells",
+                     p4s= p4s, 
+                     ColorRamp= "Precipitation", 
+                     main= "bena.sa")
+                      
+                    
+gridded(x.ok) <- TRUE
+  r <- raster(x.ok) 
+  plot( r)
+}
+bena.ts1 <- as.numeric(bena.ts[40, 2:ncol(bena.ts)])
+names(bena.ts1) = colnames(bena.ts[40,2:ncol(bena.ts)])
+
+# Ordinary Kringing Method
+x.idw <- hydrokrige(x.ts= bena.ts1, x.gis=bena.gis,
+                    X="EAST_ED50", Y="NORTH_ED50", sname="ID", bname="BASIN_NAME",
+                    catchment.name = "all",type= "both",
+                    subcatchments= bena.sa,
+                    p4s = p4s,
+                    cell.size= 3000,
+                    ColorRamp= "Precipitation",
+                    main= "IDW Precipitation on the Ebro")
+y$ELEVATION = y$UTM.500
+# Saving memory
+y$Value <- NULL
+y$
+# Computing OK, over the spatial grid defined by the DEM
+## Not run: 
+x.ok <- hydrokrige(x.ts= bena.ts1, x.gis=bena.gis, 
+                   X="EAST_ED50", Y="NORTH_ED50", sname="ID",
+                   type = "cells",
+                   formula=value~ELEVATION+Temperature,
+                   subcatchments= bena.sa,
+                   p4s= p4s, 
+                   predictors=z,
+                   ColorRamp= "Precipitation", 
+                   main= "Jehlum Basin",
+                   arrow.plot= TRUE, 
+                   arrow.offset= c(900000,5000000), arrow.scale= 40000,
+                   scalebar.plot= TRUE, 
+                   sb.offset= c(500000,5480000), sb.scale= 200000)
+plot(x.ok)
+# Covert into Raster
+gridded(x.ok) <- TRUE
+r <- raster(x.ok)
