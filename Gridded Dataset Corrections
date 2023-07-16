@@ -1,0 +1,32 @@
+library(sp)
+library(rgdal)
+library(raster)
+library(ncdf4)
+library(chron)
+library(lattice)
+library(ncdf.tools)
+library(RNetCDF)
+library(cruts)
+library(gtools)
+# Import Origonal Data
+rastlist <- mixedsort(list.files(path = '/', pattern='.tif', all.files=TRUE, full.names=FALSE,recursive = TRUE))
+# Import Correction Factor
+rastlist1 <- mixedsort(list.files(path = '/', pattern='.tif$', all.files=TRUE, full.names=F))
+raster(rastlist)
+i = 1
+dir1=getwd()
+dir2="/"
+for (i in 1: length(rastlist)) {
+  origonal_gridded = raster(paste0(dir1,'/',rastlist[i]))
+  #plot(origonal_gridded)
+  CF_gridded = raster(paste0(dir2,'/',rastlist1[i]))
+  print(names(origonal_gridded))
+  print(names(CF_gridded))
+  # Change Projection of origonal_gridded same sa CF_gridded file
+  r1 = projectRaster(origonal_gridded,crs = crs(CF_gridded))
+  origonal_gridded <- resample(r1 , CF_gridded , 'ngb')
+  corrected_chirps = origonal_gridded*CF_gridded
+  name=paste0('/',rastlist1[i])
+  writeRaster(corrected_chirps,name)
+  #plot(CF_gridded)
+} 
